@@ -91,8 +91,6 @@ static CGFloat const oriImageH = 200;
 
 }
 
-
-
 -(UIImageView *)h_headerImageView
 {
     UIImageView *imageView = objc_getAssociatedObject(self, headerImageViewKey);
@@ -107,21 +105,29 @@ static CGFloat const oriImageH = 200;
     return imageView;
 }
 
+
 -(BOOL)h_isInitial
 {
     return [objc_getAssociatedObject(self, isInitialKey) boolValue];
 }
+
 -(void)setH_isInitial:(BOOL)h_isinitial
 {
     objc_setAssociatedObject(self, isInitialKey, @(h_isinitial), OBJC_ASSOCIATION_ASSIGN);
 }
+
 -(void)seth_headerScaleImageHeight:(CGFloat)h_headerScaleImageHeight
 {
     objc_setAssociatedObject(self, headerImageViewHeight, @(h_headerScaleImageHeight), OBJC_ASSOCIATION_COPY_NONATOMIC);
 }
+
+-(CGFloat)hh
+{
+    return 10;
+}
 -(void)setH_headerScaleImage:(UIImage *)h_headerScaleImage
 {
-    [self h_headerImageView].image = h_headerScaleImage;
+    self.h_headerImageView.image = h_headerScaleImage;
     [self setupHeaderImageView];
 }
 
@@ -139,18 +145,19 @@ static CGFloat const oriImageH = 200;
 {
 
     [self setupHeaderIamgeFrame];
-    if([self h_isInitial] == NO)
+    if(self.h_isInitial == NO)
     {
         [self addObserver:self forKeyPath:HKeyPath(self, contentOffset) options:NSKeyValueObservingOptionNew context:nil];
         [self setH_isInitial:YES];
     }
-    
 }
+
 
 -(void)setupHeaderIamgeFrame
 {
-    [self h_headerImageView].frame = CGRectMake(0, 0, self.bounds.size.width, [self h_headerScaleImageHeight]);
+    self.h_headerImageView.frame = CGRectMake(0, 0, self.bounds.size.width, [self h_headerScaleImageHeight]);
 }
+
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context
 {
@@ -161,14 +168,14 @@ static CGFloat const oriImageH = 200;
         [self h_headerImageView].frame = CGRectMake(offsetY, offsetY,self.bounds.size.width - offsetY * 2, [self h_headerScaleImageHeight] - offsetY);
     }else
     {
-        [self h_headerImageView].frame = CGRectMake(0, 0, self.bounds.size.width, [self h_headerScaleImageHeight]);
+        self.h_headerImageView.frame = CGRectMake(0, 0, self.bounds.size.width, [self h_headerScaleImageHeight]);
     }
 
 }
 
 - (void)dealloc
 {
-    if ([self h_isInitial]) { // 初始化过，就表示有监听contentOffset属性，才需要移除
+    if (self.h_isInitial) { // 初始化过，就表示有监听contentOffset属性，才需要移除
         
         [self removeObserver:self forKeyPath:HKeyPath(self, contentOffset)];
         
